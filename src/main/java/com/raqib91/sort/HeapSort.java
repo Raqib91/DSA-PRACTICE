@@ -4,35 +4,29 @@ public class HeapSort implements SortingAlgo {
     @Override
     public void sort(int[] a) {
         int n = a.length;
-        int l = 0;
-        int h = n - 1;
-        quickSort(a, l, h);
-    }
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(a, n, i);
 
-    private void quickSort(int[] a, int l, int h) {
-        if (l < h) {
-            int i = partition(a, l, h);
-            quickSort(a, l, i - 1);
-            quickSort(a, i + 1, h);
+        for (int i = n - 1; i > 0; i--) {
+            swap(a, i, 0);
+            heapify(a, i, 0);
         }
     }
 
-    private int partition(int[] a, int l, int h) {
-        int pivot = a[h];
-        int lp = l;
-        int rp = h;
+    private void heapify(int[] a, int n, int i) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
 
-        while (lp < rp) {
-            while (a[lp] <= pivot && lp < rp)
-                lp++;
-            while (a[rp] >= pivot && lp < rp)
-                rp--;
+        if (left < n && a[left] > a[largest])
+            largest = left;
+        if (right < n && a[right] > a[largest])
+            largest = right;
 
-            swap(a, lp, rp);
+        if (largest != i) {
+            swap(a, largest, i);
+            heapify(a, n, largest);
         }
-
-        swap(a, lp, h);
-        return lp;
     }
 
     private void swap(int[] a, int i, int j) {
